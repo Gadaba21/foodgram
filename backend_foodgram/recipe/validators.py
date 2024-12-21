@@ -1,9 +1,8 @@
 import re
 
+from api.constants import MIN_YEAR
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-
-from api.constants import MIN_YEAR
 
 
 def validate_year(year):
