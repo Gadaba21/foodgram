@@ -22,7 +22,7 @@ services:
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static_volume:/frontend_static
-  nginx:
+  gateway:
     image: gadaba/foodgram_nginx
     env_file: .env.example
     volumes:
