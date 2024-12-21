@@ -12,7 +12,6 @@ DEBUG = env.bool('DEBUGS', True)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['84.201.140.174',
                                            'foodgrampampam.zapto.org'])
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
