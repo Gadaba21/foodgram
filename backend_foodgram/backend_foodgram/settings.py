@@ -7,7 +7,7 @@ from environs import Env
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = Env()
 env.read_env()
-SECRET_KEY = env.str('SECRET_KEYS')
+SECRET_KEY = env('SECRET_KEYS', 'secret')
 DEBUG = env.bool('DEBUGS', True)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
