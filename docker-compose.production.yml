@@ -1,0 +1,31 @@
+version: '3'
+
+volumes:
+  pg_data2_production:
+  static_volume:
+
+
+services:
+  kittygram:
+    image: postgres:13.10
+    env_file: .env.example
+    volumes:
+      - pg_data2_production:/var/lib/postgresql/data
+  backend:
+    image: gadaba/foodgram_backend
+    env_file: .env.example
+    volumes:
+      - static_volume:/backend_static
+  frontend:
+    image: gadaba/foodgram_frontend
+    env_file: .env.example
+    command: cp -r /app/build/. /frontend_static/
+    volumes:
+      - static_volume:/frontend_static
+  nginx:
+    image: gadaba/foodgram_nginx
+    env_file: .env.example
+    volumes:
+      - static_volume:/staticfiles/
+    ports:
+      - 9999:80
