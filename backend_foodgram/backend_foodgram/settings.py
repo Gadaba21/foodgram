@@ -9,7 +9,8 @@ env = Env()
 env.read_env()
 SECRET_KEY = env('SECRET_KEYS', 'secret')
 DEBUG = env.bool('DEBUGS', True)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['84.201.140.174'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['84.201.140.174',
+                                           'foodgrampampam.zapto.org'])
 
 
 INSTALLED_APPS = [
