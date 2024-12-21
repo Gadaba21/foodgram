@@ -1,15 +1,12 @@
-from rest_framework.serializers import (CharField,
-                                        ModelSerializer,
-                                        SerializerMethodField,
-                                        ValidationError,
-                                        )
-
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from rest_framework.validators import UniqueTogetherValidator
 from drf_extra_fields.fields import Base64ImageField
+from rest_framework.serializers import (CharField, ModelSerializer,
+                                        SerializerMethodField, ValidationError)
+from rest_framework.validators import UniqueTogetherValidator
 
-from .models import User, Subscription
 from recipe.models import Recipe
+
+from .models import Subscription, User
 
 
 class UserCreateSerializer(UserCreateSerializer):

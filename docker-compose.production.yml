@@ -15,7 +15,7 @@ services:
     image: gadaba/foodgram_backend
     env_file: .env.example
     volumes:
-      - static_volume:/backend_static
+      - static_volume:/backend_foodgram_static
   frontend:
     image: gadaba/foodgram_frontend
     env_file: .env.example

@@ -1,38 +1,26 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.response import Response
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect
-from rest_framework.decorators import action
-from rest_framework import serializers
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework import viewsets, mixins, status
-from rest_framework.filters import OrderingFilter
 from django.views.decorators.http import require_GET
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import mixins, serializers, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.filters import OrderingFilter
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from recipe.models import LinkMapped
-from .serializers import (IngredientSerializer,
-                          RecipeSerializer,
-                          TagSerializer,
-                          ShoppingCartSerializer,
-                          FavoriteSerializer,
-                          RecipeGETSerializer,
-                          ShortenerSerializer)
+
+from recipe.models import (Favorite, Ingredient, IngredientRecipe, LinkMapped,
+                           Recipe, ShoppingCart, Tag)
 from user.serializers import SubscriptionRecipeShortSerializer
+
 from .filters import IngredientSearchFilter, RecipeFilter
-from recipe.models import (
-    Ingredient,
-    Recipe,
-    Tag,
-    Favorite,
-    ShoppingCart,
-    IngredientRecipe
-)
-from .permissions import (
-    AnonimReadOnly,
-    IsSuperUserIsAdminIsAuthor,
-)
-from .utils import create_shopping_cart
 from .pagination import CustomPageNumberPagination
+from .permissions import AnonimReadOnly, IsSuperUserIsAdminIsAuthor
+from .serializers import (FavoriteSerializer, IngredientSerializer,
+                          RecipeGETSerializer, RecipeSerializer,
+                          ShoppingCartSerializer, ShortenerSerializer,
+                          TagSerializer)
+from .utils import create_shopping_cart
 
 
 class RecipeViewSet(viewsets.ModelViewSet):

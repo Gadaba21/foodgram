@@ -1,14 +1,9 @@
 from django.contrib import admin
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from django.urls import path, include
-from api.views import (
-    TagViewSet,
-    IngredientViewSet,
-    RecipeViewSet,
-    load_url
-)
-from user.views import UserViewSet
 
+from api.views import IngredientViewSet, RecipeViewSet, TagViewSet, load_url
+from user.views import UserViewSet
 
 router_v1 = DefaultRouter()
 router_v1.register('tags', TagViewSet, basename='tags')

@@ -1,19 +1,17 @@
 from django.shortcuts import get_object_or_404
-from rest_framework.filters import SearchFilter
 from djoser.views import UserViewSet
+from rest_framework.decorators import action
+from rest_framework.exceptions import ParseError
+from rest_framework.filters import SearchFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import (HTTP_200_OK,
-                                   HTTP_400_BAD_REQUEST,
-                                   HTTP_201_CREATED,
-                                   HTTP_204_NO_CONTENT)
-from rest_framework.decorators import action
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.exceptions import ParseError
+from rest_framework.status import (HTTP_200_OK, HTTP_201_CREATED,
+                                   HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST)
 
-from .serializers import (UserSerializer, AvatarSerializer,
-                          SubscriptionSerializer, SubscriptionShowSerializer)
-from .models import User, Subscription
+from .models import Subscription, User
+from .serializers import (AvatarSerializer, SubscriptionSerializer,
+                          SubscriptionShowSerializer, UserSerializer)
 
 
 class FoodgramPagination(PageNumberPagination):
@@ -60,7 +58,7 @@ class UserViewSet(UserViewSet):
         url_path='subscribe',
         url_name='subscribe',
         permission_classes=(IsAuthenticated,),
-    )   
+    )
     def subscribe(self, request, id):
         author = get_object_or_404(User, id=id)
         if request.method == 'POST':

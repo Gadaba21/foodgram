@@ -1,11 +1,13 @@
-from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
 import secrets
 import string
 
-from user.models import User
-from .validators import validate_slug
+from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
+
 from api.constants import MAX_LENGTH, MAX_SLAG
+from user.models import User
+
+from .validators import validate_slug
 
 
 class Tag(models.Model):

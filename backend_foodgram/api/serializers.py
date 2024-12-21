@@ -1,15 +1,14 @@
-from rest_framework import serializers
 from django.db import transaction
-from recipe.models import (Tag, Ingredient, Recipe,
-                           Favorite, IngredientRecipe,
-                           ShoppingCart, LinkMapped)
-from rest_framework.validators import UniqueTogetherValidator
-from user.serializers import UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from rest_framework.exceptions import ValidationError, AuthenticationFailed
+from rest_framework import serializers, status
+from rest_framework.exceptions import AuthenticationFailed, ValidationError
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.reverse import reverse
+from rest_framework.validators import UniqueTogetherValidator
+
+from recipe.models import (Favorite, Ingredient, IngredientRecipe, LinkMapped,
+                           Recipe, ShoppingCart, Tag)
+from user.serializers import UserSerializer
 
 
 class TagSerializer(serializers.ModelSerializer):
