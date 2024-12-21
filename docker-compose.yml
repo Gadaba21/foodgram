@@ -5,7 +5,7 @@ volumes:
   static:
 
 services:
-  kittygram:
+  foodgram:
     image: postgres:13.10
     env_file: .env.example
     volumes:
@@ -21,7 +21,7 @@ services:
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
-  gateway:
+  nginx:
     build: ./nginx/
     volumes:
       - static:/staticfiles/

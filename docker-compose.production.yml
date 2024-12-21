@@ -6,12 +6,12 @@ volumes:
 
 
 services:
-  kittygram:
+  foodgram:
     image: postgres:13.10
     env_file: .env.example
     volumes:
       - pg_data2_production:/var/lib/postgresql/data
-  backend:
+  backend_foodgram:
     image: gadaba/foodgram_backend
     env_file: .env.example
     volumes:
