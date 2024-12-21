@@ -8,7 +8,7 @@ from .models import User
 class UsersAdmin(UserAdmin):
     """Админка для пользователя"""
 
-    list_display = ('id', 'full_name', 'username', 'email', 'is_staff')
+    list_display = ('id', 'username', 'email', 'role')
     search_fields = ('username', 'email')
     search_help_text = 'Поиск по `username` и `email`'
-    list_display_links = ('id', 'username', 'email', 'full_name')
+    list_display_links = ('id', 'username', 'email')
