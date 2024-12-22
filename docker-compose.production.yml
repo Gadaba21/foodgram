@@ -1,7 +1,7 @@
 
 volumes:
-  pg_data2_production:
-  static_volume:
+  pg_data2:
+  static:
   media:
 
 services:
@@ -9,12 +9,12 @@ services:
     image: postgres:13.10
     env_file: .env.example
     volumes:
-      - pg_data2_production:/var/lib/postgresql/data
+      - pg_data2:/var/lib/postgresql/data
   backend:
     image: gadaba/foodgram_backend
     env_file: .env.example
     volumes:
-      - static_volume:/backend_foodgram_static
+      - static:/backend_foodgram_static
       - media:/backend_foodgram_media
     depends_on:
       - foodgram
@@ -23,12 +23,15 @@ services:
     env_file: .env.example
     command: cp -r /app/build/. /frontend_static/
     volumes:
-      - static_volume:/frontend_static
+      - static:/frontend_static
   gateway:
     image: gadaba/foodgram_nginx
     env_file: .env.example
     volumes:
-      - static_volume:/staticfiles/
+      - static:/staticfiles/
       - media:/media/
+    depends_on:
+      - frontend
+      - backend
     ports:
       - 9999:80
