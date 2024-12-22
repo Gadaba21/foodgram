@@ -17,6 +17,6 @@ HELP_TEXT_NAME = RESOLVED_CHARS + FORBIDDEN_NAME
 UNIQUE_FIELDS = (
     'Пользователь с таким email уже существует.',
 )
-MAX_PAS = 50
+MAX_PAS = 100
 PAGE_SIZE = 20
 MAX_PAGE_SIZE = 50

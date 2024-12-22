@@ -2,7 +2,7 @@
 volumes:
   pg_data2_production:
   static_volume:
-  mediafiles:
+  media:
 
 services:
   foodgram:
@@ -15,7 +15,7 @@ services:
     env_file: .env.example
     volumes:
       - static_volume:/backend_foodgram_static
-      - mediafiles:/backend_foodgram_media
+      - media:/backend_foodgram_media
     depends_on:
       - foodgram
   frontend:
@@ -29,6 +29,6 @@ services:
     env_file: .env.example
     volumes:
       - static_volume:/staticfiles/
-      - mediafiles:/media/
+      - media:/media/
     ports:
       - 9999:80
