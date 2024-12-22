@@ -3,7 +3,7 @@ version: '3'
 volumes:
   pg_data2_production:
   static_volume:
-
+  mediafiles:
 
 services:
   foodgram:
@@ -11,11 +11,14 @@ services:
     env_file: .env.example
     volumes:
       - pg_data2_production:/var/lib/postgresql/data
-  backend_foodgram:
+  backend:
     image: gadaba/foodgram_backend
     env_file: .env.example
     volumes:
       - static_volume:/backend_foodgram_static
+      - mediafiles:/backend_foodgram_media
+    depends_on:
+      - foodgram
   frontend:
     image: gadaba/foodgram_frontend
     env_file: .env.example
@@ -27,5 +30,9 @@ services:
     env_file: .env.example
     volumes:
       - static_volume:/staticfiles/
+      - mediafiles:/media/
+    depends_on:
+      - frontend
+      - backend
     ports:
       - 9999:80

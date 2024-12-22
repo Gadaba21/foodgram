@@ -10,7 +10,8 @@ env.read_env()
 SECRET_KEY = env('SECRET_KEYS', 'secret')
 DEBUG = env.bool('DEBUGS', True)
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['84.201.140.174',
-                                           'foodgrampampam.zapto.org'])
+                                           'foodgrampampam.zapto.org',
+                                           'localhost'])
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -62,11 +63,11 @@ WSGI_APPLICATION = 'backend_foodgram.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'django'),
-        'USER': os.getenv('POSTGRES_USER', 'django'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
-        'HOST': os.getenv('DB_HOST', ''),
-        'PORT': os.getenv('DB_PORT', 5432)
+        'NAME': 'foodgram',
+        'USER': 'foodgram_user',
+        'PASSWORD': 'foodgram_password',
+        'HOST': 'foodgram',
+        'PORT': 5432
     }
 }
 
