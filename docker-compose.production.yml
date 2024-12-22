@@ -20,7 +20,6 @@ services:
     depends_on:
       - foodgram
   frontend:
-    image: gadaba/foodgram_frontend
     env_file: .env.example
     command: cp -r /app/build/. /frontend_static/
     volumes:
