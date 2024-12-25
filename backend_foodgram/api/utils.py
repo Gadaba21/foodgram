@@ -74,4 +74,3 @@ def handle_delete_favorite_or_cart(request, pk, model):
         )
     shopping_cart_recipe.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
-
