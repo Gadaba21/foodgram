@@ -15,7 +15,7 @@ RESOLVED_CHARS = (
 FORBIDDEN_NAME = 'Имя пользователя \'me\' использовать нельзя!'
 HELP_TEXT_NAME = RESOLVED_CHARS + FORBIDDEN_NAME
 UNIQUE_FIELDS = (
-    'Пользователь с таким email уже существует.',
+    'Пользователь с таким ником уже существует.',
 )
 MAX_PAS = 100
 PAGE_SIZE = 20

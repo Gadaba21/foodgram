@@ -1,5 +1,5 @@
 from django.db import transaction
-from drf_extra_fields.fields import Base64ImageField
+from .utils import Base64ImageField
 from recipe.models import (Favorite, Ingredient, IngredientRecipe, LinkMapped,
                            Recipe, ShoppingCart, Tag)
 from rest_framework import serializers, status
