@@ -1,7 +1,8 @@
 from pathlib import Path
 
-from api.constants import PER_PAGE
 from environs import Env
+
+from api.constants import PER_PAGE
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = Env()

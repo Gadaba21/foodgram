@@ -1,12 +1,26 @@
-from api.utils import Base64ImageField
+import uuid
+from base64 import b64decode
+
+from django.core.files.base import ContentFile
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from recipe.models import Recipe
-from rest_framework.serializers import (CharField, ModelSerializer,
+from rest_framework.serializers import (CharField, ImageField, ModelSerializer,
                                         ReadOnlyField, SerializerMethodField,
                                         ValidationError)
 from rest_framework.validators import UniqueTogetherValidator
 
+from recipe.models import Recipe
+
 from .models import Subscription, User
+
+
+class Base64ImageField(ImageField):
+    def to_internal_value(self, data):
+        if isinstance(data, str) and data.startswith('data:image'):
+            format, imgstr = data.split(';base64,')
+            ext = format.split('/')[-1]
+            unique_filename = f'{uuid.uuid4()}.{ext}'
+            data = ContentFile(b64decode(imgstr), name=unique_filename)
+        return super().to_internal_value(data)
 
 
 class UserRepresentationSerializer(ModelSerializer):
