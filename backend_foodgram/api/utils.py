@@ -9,7 +9,6 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from rest_framework import serializers, status
 from rest_framework.response import Response
-
 from user.serializers import SubscriptionRecipeShortSerializer
 
 

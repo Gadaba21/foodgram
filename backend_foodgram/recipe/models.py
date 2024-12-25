@@ -1,12 +1,12 @@
 import secrets
 import string
 
+from api.constants import MAX_LENGTH, MAX_SLAG, MAX_VALUE, MIN_VALUE
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.html import mark_safe
-
 from user.models import User
-from api.constants import MAX_LENGTH, MAX_SLAG, MAX_VALUE, MIN_VALUE
+
 from .validators import validate_slug
 
 
