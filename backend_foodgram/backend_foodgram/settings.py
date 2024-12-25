@@ -66,7 +66,7 @@ DATABASES = {
         'USER': 'foodgram_user',
         'PASSWORD': 'foodgram_password',
         'HOST': 'foodgram',
-        'PORT': 5432
+        'PORT': 5432,
     }
 }
 
