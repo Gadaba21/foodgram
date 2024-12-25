@@ -1,6 +1,5 @@
-from django.contrib import admin
-
 from api.constants import PER_PAGE
+from django.contrib import admin
 
 from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                      ShoppingCart, Tag)

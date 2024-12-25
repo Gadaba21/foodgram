@@ -28,7 +28,7 @@ services:
     build: ./nginx/
     volumes:
       - static:/staticfiles/
-      - media:/media/
+      - media:/backend_foodgram_media/
     depends_on:
       - frontend
       - backend
