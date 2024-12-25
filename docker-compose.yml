@@ -15,7 +15,7 @@ services:
     env_file: .env.example
     volumes:
       - static:/backend_foodgram_static
-      - media:/backend_foodgram_media
+      - media:/app/media
     depends_on:
       - foodgram
   frontend:
@@ -28,7 +28,7 @@ services:
     build: ./nginx/
     volumes:
       - static:/staticfiles/
-      - media:/backend_foodgram_media/
+      - media:/media/
     depends_on:
       - frontend
       - backend
