@@ -1,8 +1,8 @@
-from api.constants import (HELP_TEXT_NAME, LENGTH_TEXT, MAX_EMAIL_FIELD,
-                           MAX_NAME_FIELD, MAX_PAS, UNIQUE_FIELDS)
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from api.constants import (HELP_TEXT_NAME, LENGTH_TEXT, MAX_EMAIL_FIELD,
+                           MAX_NAME_FIELD, MAX_PAS, UNIQUE_FIELDS)
 from .validators import UsernameValidator, validate_username
 
 

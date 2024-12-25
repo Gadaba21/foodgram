@@ -1,11 +1,12 @@
 import secrets
 import string
 
-from api.constants import MAX_LENGTH, MAX_SLAG
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from user.models import User
+from django.utils.html import mark_safe
 
+from user.models import User
+from api.constants import MAX_LENGTH, MAX_SLAG, MAX_VALUE, MIN_VALUE
 from .validators import validate_slug
 
 
@@ -44,26 +45,33 @@ class Ingredient(models.Model):
 class Recipe(models.Model):
     tags = models.ManyToManyField(
         Tag,
-        related_name='recipes',
         verbose_name='Тег'
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         verbose_name='Автор',
-        related_name='recipes',
     )
     ingredients = models.ManyToManyField(
         Ingredient,
         through='IngredientRecipe',
-        related_name='recipes',
         verbose_name='Ингредиент',
     )
     description = models.TextField(
         verbose_name='Описание',
     )
-    cooking_time = models.SmallIntegerField(
+    cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время готовки',
+        validators=[
+            MinValueValidator(
+                MIN_VALUE,
+                message='Время готовки должно быть больше одной минуты'
+            ),
+            MaxValueValidator(
+                MAX_VALUE,
+                message='Время готовки должно быть меньше 1000 минут'
+            )
+        ],
     )
     name = models.CharField(
         verbose_name='Название',
@@ -73,6 +81,12 @@ class Recipe(models.Model):
         upload_to='recipe/images/',
         verbose_name='Картинка',
     )
+
+    def image_tag(self):
+        return mark_safe(
+            '<img src="/recipe/images/%s" width="150" height="150" />' % (
+                self.image))
+
     text = models.TextField(verbose_name='описание')
     pub_date = models.DateTimeField(
         auto_now_add=True,
@@ -91,7 +105,7 @@ class Recipe(models.Model):
 
 
 class Favorite(models.Model):
-    recipe = models.OneToOneField(
+    recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
         related_name='favorited_recipe',
@@ -132,11 +146,11 @@ class IngredientRecipe(models.Model):
         verbose_name='количество',
         validators=[
             MinValueValidator(
-                1,
+                MIN_VALUE,
                 message='Количество ингредиента не может быть нулевым'
             ),
             MaxValueValidator(
-                1000,
+                MAX_VALUE,
                 message='Количество ингредиента не может быть больше тысячи'
             )
         ],
@@ -158,13 +172,13 @@ class IngredientRecipe(models.Model):
 
 
 class ShoppingCart(models.Model):
-    recipe_cart = models.ForeignKey(
+    recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
         related_name='shopping_cart',
         verbose_name='рецепт'
     )
-    user_cart = models.ForeignKey(
+    user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name='shopping_cart_user',
@@ -174,16 +188,16 @@ class ShoppingCart(models.Model):
     class Meta:
         verbose_name = 'Рецепт пользователя для списка покупок'
         verbose_name_plural = 'Рецепты пользователей для списка покупок'
-        ordering = ('user_cart',)
+        ordering = ('user',)
         constraints = (
             models.UniqueConstraint(
-                fields=['recipe_cart', 'user_cart'],
+                fields=['recipe', 'user'],
                 name='unique_shopping_cart'
             ),
         )
 
     def __str__(self):
-        return f'{self.recipe_cart} в списке покупок у {self.user_cart}'
+        return f'{self.recipe} в списке покупок у {self.user}'
 
 
 class LinkMapped(models.Model):

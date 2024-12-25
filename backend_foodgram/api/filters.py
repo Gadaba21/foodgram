@@ -1,4 +1,5 @@
 from django_filters import rest_framework as filters
+
 from recipe.models import Ingredient, Recipe
 
 
@@ -16,12 +17,11 @@ class RecipeFilter(filters.FilterSet):
     is_favorited = filters.BooleanFilter(method='get_is_favorited')
     is_in_shopping_cart = filters.BooleanFilter(
         method='get_is_in_shopping_cart')
-    author = filters.NumberFilter(field_name='author__id')
 
     class Meta:
         model = Recipe
-        fields = ['tags', 'author', 'is_favorited',
-                  'is_in_shopping_cart', 'name']
+        fields = ('tags', 'author', 'is_favorited',
+                  'is_in_shopping_cart', 'name')
 
     def get_is_favorited(self, queryset, name, value):
         if value and self.request.user.is_authenticated:
@@ -30,5 +30,5 @@ class RecipeFilter(filters.FilterSet):
 
     def get_is_in_shopping_cart(self, queryset, name, value):
         if value and self.request.user.is_authenticated:
-            return queryset.filter(shopping_cart__user_cart=self.request.user)
+            return queryset.filter(shopping_cart__user=self.request.user)
         return queryset

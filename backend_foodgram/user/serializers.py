@@ -1,11 +1,24 @@
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from recipe.models import Recipe
 from rest_framework.serializers import (CharField, ModelSerializer,
-                                        SerializerMethodField, ValidationError)
+                                        ReadOnlyField, SerializerMethodField,
+                                        ValidationError)
 from rest_framework.validators import UniqueTogetherValidator
 
+from recipe.models import Recipe
 from .models import Subscription, User
+
+
+class UserRepresentationSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'username',
+            'first_name',
+            'last_name',
+        )
 
 
 class UserCreateSerializer(UserCreateSerializer):
@@ -41,14 +54,8 @@ class UserCreateSerializer(UserCreateSerializer):
         return user
 
     def to_representation(self, instance):
-        representation = {
-            'id': instance.id,
-            'email': instance.email,
-            'username': instance.username,
-            'first_name': instance.first_name,
-            'last_name': instance.last_name,
-        }
-        return representation
+        serializer = UserRepresentationSerializer(instance)
+        return serializer.data
 
 
 class UserSerializer(UserSerializer):
@@ -96,7 +103,7 @@ class SubscriptionRecipeShortSerializer(ModelSerializer):
 class SubscriptionShowSerializer(UserSerializer):
 
     recipes = SerializerMethodField()
-    recipes_count = SerializerMethodField()
+    recipes_count = ReadOnlyField(source='recipes.count')
 
     class Meta:
         model = User
@@ -115,16 +122,12 @@ class SubscriptionShowSerializer(UserSerializer):
     def get_recipes(self, object):
         recipes_limit = self.context.get('request').query_params.get(
             'recipes_limit', None)
+        author_recipes = object.recipes.all()
         if recipes_limit is not None:
             author_recipes = object.recipes.all()[:int(recipes_limit)]
-        else:
-            author_recipes = object.recipes.all()
         return SubscriptionRecipeShortSerializer(
             author_recipes, many=True
         ).data
-
-    def get_recipes_count(self, object):
-        return object.recipes.count()
 
 
 class SubscriptionSerializer(ModelSerializer):

@@ -1,13 +1,15 @@
 from django.db import transaction
 from drf_extra_fields.fields import Base64ImageField
-from recipe.models import (Favorite, Ingredient, IngredientRecipe, LinkMapped,
-                           Recipe, ShoppingCart, Tag)
 from rest_framework import serializers, status
-from rest_framework.exceptions import AuthenticationFailed, ValidationError
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.validators import UniqueTogetherValidator
+
+from recipe.models import (Favorite, Ingredient, IngredientRecipe, LinkMapped,
+                           Recipe, ShoppingCart, Tag)
 from user.serializers import UserSerializer
+from .constants import BAD_INGREDIENT_LENGTH
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -53,7 +55,8 @@ class IngredientFullSerializer(serializers.ModelSerializer):
 class RecipeGETSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer(read_only=True)
-    ingredients = serializers.SerializerMethodField()
+    ingredients = IngredientFullSerializer(source='ingredientrecipe_set',
+                                           many=True, read_only=True)
     is_favorited = serializers.SerializerMethodField(read_only=True)
     is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
 
@@ -71,11 +74,6 @@ class RecipeGETSerializer(serializers.ModelSerializer):
                   'cooking_time'
                   )
 
-    @staticmethod
-    def get_ingredients(object):
-        ingredients = IngredientRecipe.objects.filter(recipe=object)
-        return IngredientFullSerializer(ingredients, many=True).data
-
     def get_is_favorited(self, object):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
@@ -87,7 +85,7 @@ class RecipeGETSerializer(serializers.ModelSerializer):
         if request is None or request.user.is_anonymous:
             return False
         return request.user.shopping_cart_user.filter(
-            recipe_cart=object).exists()
+            recipe=object).exists()
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -109,7 +107,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate_ingredients(self, ingredients):
-        if len(ingredients) == 0:
+        if len(ingredients) == BAD_INGREDIENT_LENGTH:
             raise serializers.ValidationError('Добавьте хотя бы 1 ингредиент.')
         ingredients_data = [
             ingredient.get('id') for ingredient in ingredients
@@ -126,13 +124,6 @@ class RecipeSerializer(serializers.ModelSerializer):
                 'Теги рецепта должны быть уникальными'
             )
         return tags
-
-    def validate_cooking_time(self, cooking_time):
-        if cooking_time < 1:
-            raise serializers.ValidationError(
-                'Время готовки не может быть меньше 1'
-            )
-        return cooking_time
 
     @staticmethod
     def add_ingredients(ingredients_data, recipe):
@@ -152,8 +143,6 @@ class RecipeSerializer(serializers.ModelSerializer):
         if 'image' not in validated_data or not validated_data['image']:
             raise ValidationError({'image': 'Поле `image` обязательно'})
         author = self.context.get('request').user
-        if not author.is_authenticated:
-            raise AuthenticationFailed('Вы не авторизованны')
         tags_data = validated_data.pop('tags')
         ingredients_data = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(author=author, **validated_data)
@@ -163,7 +152,6 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        recipe = instance
         if 'image' not in validated_data or not validated_data['image']:
             raise ValidationError({'image': 'Поле `image` обязательно'})
         if 'tags' not in validated_data or not validated_data['tags']:
@@ -172,18 +160,18 @@ class RecipeSerializer(serializers.ModelSerializer):
                                                      ['ingredients']):
             raise ValidationError(
                 {'ingredients': 'Поле `ingredients` обязательно'})
+        # Стандартные поля можно обновить, вызвавродительскуюреализацию метода.
+        # не выходит, так как не все поля доступны для редактирования
         instance.name = validated_data.get('name', instance.name)
         instance.text = validated_data.get('text', instance.text)
         instance.cooking_time = validated_data.get(
             'cooking_time', instance.cooking_time
         )
-        instance.tags.clear()
-        instance.ingredients.clear()
         tags_data = validated_data.get('tags')
         instance.tags.set(tags_data)
         ingredients_data = validated_data.get('ingredients')
-        IngredientRecipe.objects.filter(recipe=recipe).delete()
-        self.add_ingredients(ingredients_data, recipe)
+        IngredientRecipe.objects.filter(recipe=instance).delete()
+        self.add_ingredients(ingredients_data, instance)
         instance.save()
         return instance
 
@@ -214,7 +202,7 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         validators = [
             UniqueTogetherValidator(
                 queryset=ShoppingCart.objects.all(),
-                fields=('recipe_cart', 'user_cart'),
+                fields=('recipe', 'user'),
                 message='Вы уже добавляли это рецепт в список покупок'
             )
         ]

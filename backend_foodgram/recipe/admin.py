@@ -1,6 +1,6 @@
-from api.constants import PER_PAGE
 from django.contrib import admin
 
+from api.constants import PER_PAGE
 from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                      ShoppingCart, Tag)
 
@@ -36,10 +36,18 @@ class IngredientAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
-class IngredientAmountInline(admin.TabularInline):
+class TagInline(admin.TabularInline):
+    model = Recipe.tags.through
+    extra = 1
+    verbose_name = 'Тег'
+    verbose_name_plural = 'Теги'
 
+
+class IngredientInline(admin.StackedInline):
     model = IngredientRecipe
-    min_num = 1
+    extra = 1
+    verbose_name = 'Ингредиент'
+    verbose_name_plural = 'Ингредиенты'
 
 
 @admin.register(Recipe)
@@ -52,18 +60,31 @@ class RecipeAdmin(admin.ModelAdmin):
         'author',
         'text',
         'cooking_time',
-        'image',
         'pub_date',
+        'ingredient_list',
+        'tag_list',
     )
     inlines = [
-        IngredientAmountInline,
+        IngredientInline,
+        TagInline
     ]
-
+    fields = ['image_tag']
+    readonly_fields = ['image_tag']
     empty_value_display = 'значение отсутствует'
     list_editable = ('author',)
     list_filter = ('author', 'name', 'tags')
     list_per_page = PER_PAGE
     search_fields = ('author', 'name')
+
+    def ingredient_list(self, obj):
+        return ', '.join(
+            [ingredient.name for ingredient in obj.ingredients.all()])
+
+    def tag_list(self, obj):
+        return ', '.join([tag.name for tag in obj.tags.all()])
+
+    ingredient_list.short_description = 'Список ингредиентов'
+    tag_list.short_description = 'Список тегов'
 
 
 @admin.register(IngredientRecipe)
@@ -103,12 +124,12 @@ class ShoppingCartAdmin(admin.ModelAdmin):
 
     list_display = (
         'pk',
-        'recipe_cart',
-        'user_cart',
+        'recipe',
+        'user',
     )
 
     empty_value_display = 'значение отсутствует'
-    list_editable = ('recipe_cart', 'user_cart')
-    list_filter = ('user_cart',)
-    search_fields = ('user_cart',)
+    list_editable = ('recipe', 'user')
+    list_filter = ('user',)
+    search_fields = ('user',)
     list_per_page = PER_PAGE
