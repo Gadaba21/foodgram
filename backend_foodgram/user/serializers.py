@@ -1,5 +1,5 @@
-from djoser.serializers import UserCreateSerializer, UserSerializer
 from api.utils import Base64ImageField
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from recipe.models import Recipe
 from rest_framework.serializers import (CharField, ModelSerializer,
                                         ReadOnlyField, SerializerMethodField,

@@ -1,12 +1,12 @@
 import io
-from pathlib import Path
 import uuid
 from base64 import b64decode
+from pathlib import Path
 
+from django.core.files.base import ContentFile
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from recipe.models import Recipe
-from django.core.files.base import ContentFile
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas

@@ -1,5 +1,4 @@
 from django.db import transaction
-from .utils import Base64ImageField
 from recipe.models import (Favorite, Ingredient, IngredientRecipe, LinkMapped,
                            Recipe, ShoppingCart, Tag)
 from rest_framework import serializers, status
@@ -10,6 +9,7 @@ from rest_framework.validators import UniqueTogetherValidator
 from user.serializers import UserSerializer
 
 from .constants import BAD_INGREDIENT_LENGTH
+from .utils import Base64ImageField
 
 
 class TagSerializer(serializers.ModelSerializer):
