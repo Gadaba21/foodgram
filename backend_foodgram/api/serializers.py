@@ -95,7 +95,6 @@ class RecipeGETSerializer(serializers.ModelSerializer):
 class RecipeSerializer(serializers.ModelSerializer):
     ingredients = IngredientRecipeSerializer(many=True, required=True)
     image = Base64ImageField(use_url=True, max_length=None, required=True)
-    author = UserSerializer(read_only=True)
 
     class Meta:
         model = Recipe
@@ -107,7 +106,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             'name',
             'text',
             'cooking_time',
-            'author'
         )
 
     def validate_ingredients(self, ingredients):
@@ -166,12 +164,12 @@ class RecipeSerializer(serializers.ModelSerializer):
                                                      ['ingredients']):
             raise ValidationError(
                 {'ingredients': 'Поле `ingredients` обязательно'})
-        super().update(instance, validated_data)
-        tags_data = validated_data.get('tags')
+        tags_data = validated_data.pop('tags', None)
         instance.tags.set(tags_data)
-        ingredients_data = validated_data.get('ingredients')
+        ingredients_data = validated_data.pop('ingredients', None)
         IngredientRecipe.objects.filter(recipe=instance).delete()
         self.add_ingredients(ingredients_data, instance)
+        instance = super().update(instance, validated_data)
         instance.save()
         return instance
 
