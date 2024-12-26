@@ -97,7 +97,7 @@ class Recipe(models.Model):
 
     def image_tag(self):
         return mark_safe(
-            '<img src="app/media/recipe/images/%s"width="150" height="150" />'
+            '<img src="media/recipe/images/%s"width="150" height="150" />'
             % (self.image))
 
     text = models.TextField(verbose_name='описание')

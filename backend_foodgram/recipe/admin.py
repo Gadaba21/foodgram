@@ -104,7 +104,7 @@ class IngredientRecipeAdmin(admin.ModelAdmin):
         'amount',
         'recipe'
     )
-    search_fields = ('ingredient', 'recipe')
+    search_fields = ('ingredient__name', 'recipe__name')
     empty_value_display = 'значение отсутствует'
     list_per_page = PER_PAGE
 
@@ -120,8 +120,8 @@ class FavoriteAdmin(admin.ModelAdmin):
     )
 
     empty_value_display = 'значение отсутствует'
-    list_filter = ('user', 'recipe')
-    search_fields = ('user', 'recipe')
+    list_filter = ('user__username', 'recipe__name')
+    search_fields = ('user__username', 'recipe__name')
     list_per_page = PER_PAGE
 
 
@@ -136,7 +136,14 @@ class ShoppingCartAdmin(admin.ModelAdmin):
     )
 
     empty_value_display = 'значение отсутствует'
-    list_editable = ('recipe', 'user')
-    list_filter = ('user',)
-    search_fields = ('user', 'recipe')
+    list_filter = ('user__username', 'recipe__name')
+    search_fields = ('user__username', 'recipe__name')
     list_per_page = PER_PAGE
+
+
+class RecipeTagAdmin(admin.ModelAdmin):
+    """Класс настройки связи рецептов и тегов."""
+
+    list_display = ('recipe', 'tag')
+    search_fields = ('recipe__name', 'tag__name')
+    list_filter = ('recipe__name', 'tag__name')
