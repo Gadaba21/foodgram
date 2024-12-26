@@ -122,14 +122,14 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     permission_classes = (AllowAny,)
     filterset_class = IngredientSearchFilter
     filter_backends = (DjangoFilterBackend,)
-    renderer_classes = (CustomJSONRenderer,)
+    pagination_class = None
 
 
 class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (AllowAny,)
-    renderer_classes = (CustomJSONRenderer,)
+    pagination_class = None
 
 
 @require_GET
