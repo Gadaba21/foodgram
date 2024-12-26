@@ -80,9 +80,9 @@ class RecipeAdmin(admin.ModelAdmin):
     readonly_fields = ['image_tag']
     empty_value_display = 'значение отсутствует'
     list_editable = ('author',)
-    list_filter = ('author', 'name', 'tags')
+    list_filter = ('author__name', 'name', 'tags__name')
     list_per_page = PER_PAGE
-    search_fields = ('author', 'name')
+    search_fields = ('author__name', 'name')
 
     @admin.display(description='Список ингредиентов')
     def ingredient_list(self, obj):
@@ -104,6 +104,7 @@ class IngredientRecipeAdmin(admin.ModelAdmin):
         'amount',
         'recipe'
     )
+    search_fields = ('ingredient', 'recipe')
     empty_value_display = 'значение отсутствует'
     list_per_page = PER_PAGE
 

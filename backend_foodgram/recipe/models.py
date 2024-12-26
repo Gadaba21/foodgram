@@ -33,6 +33,9 @@ class Tag(models.Model):
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
+    def __str__(self):
+        return self.name
+
 
 class Ingredient(models.Model):
     name = models.CharField(
@@ -94,7 +97,7 @@ class Recipe(models.Model):
 
     def image_tag(self):
         return mark_safe(
-            '<img src="/recipe/images/%s" width="150" height="150" />' % (
+            '<img src="app/media/recipe/images/%s" width="150" height="150" />' % (
                 self.image))
 
     text = models.TextField(verbose_name='описание')
