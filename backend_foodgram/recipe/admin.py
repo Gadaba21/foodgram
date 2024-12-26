@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.html import mark_safe
 
 from api.constants import PER_PAGE
 
@@ -70,14 +71,14 @@ class RecipeAdmin(admin.ModelAdmin):
         'pub_date',
         'ingredient_list',
         'tag_list',
-        'image_tag',
+        'get_image',
     )
     inlines = [
         IngredientInline,
         TagInline
     ]
-    fields = ('image_tag', 'name', 'text', 'cooking_time')
-    readonly_fields = ['image_tag']
+    fields = ('get_image', 'name', 'text', 'cooking_time')
+    readonly_fields = ['get_image']
     empty_value_display = 'значение отсутствует'
     list_editable = ('author',)
     list_filter = ('author__username', 'name', 'tags__name')
@@ -92,6 +93,9 @@ class RecipeAdmin(admin.ModelAdmin):
     @admin.display(description='Список тегов')
     def tag_list(self, obj):
         return ', '.join([tag.name for tag in obj.tags.all()])
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="80" height="30"')
 
 
 @admin.register(IngredientRecipe)

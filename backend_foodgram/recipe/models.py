@@ -3,7 +3,7 @@ import string
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.utils.html import mark_safe
+
 
 from api.constants import (
     HASH_LENGTH,
@@ -94,12 +94,6 @@ class Recipe(models.Model):
         upload_to='recipe/images/',
         verbose_name='Картинка',
     )
-
-    def image_tag(self):
-        return mark_safe(
-            '<img src="media/%s"width="150" height="150" />'
-            % (self.image))
-
     text = models.TextField(verbose_name='описание')
     pub_date = models.DateTimeField(
         auto_now_add=True,
