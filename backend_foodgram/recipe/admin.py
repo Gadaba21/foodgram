@@ -77,8 +77,7 @@ class RecipeAdmin(admin.ModelAdmin):
         IngredientInline,
         TagInline
     ]
-    fields = ('image', 'name', 'text', 'cooking_time', 'author', 'get_image')
-    readonly_fields = ['get_image']
+    fields = ('image', 'name', 'text', 'cooking_time', 'author')
     empty_value_display = 'значение отсутствует'
     list_editable = ('author',)
     list_filter = ('author__username', 'name', 'tags__name')

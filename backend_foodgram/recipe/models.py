@@ -134,7 +134,7 @@ class Favorite(models.Model):
         verbose_name_plural = 'Избранные рецепты'
 
     def __str__(self):
-        return self.name
+        return self.recipe.name
 
 
 class IngredientRecipe(models.Model):
