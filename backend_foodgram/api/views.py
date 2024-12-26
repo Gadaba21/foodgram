@@ -13,7 +13,7 @@ from rest_framework.reverse import reverse
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from .filters import IngredientSearchFilter, RecipeFilter
-from .pagination import CustomJSONRenderer, CustomPageNumberPagination
+from .pagination import CustomPageNumberPagination
 from .permissions import AnonimReadOnly, IsSuperUserIsAdminIsAuthor
 from .serializers import (FavoriteSerializer, IngredientSerializer,
                           RecipeGETSerializer, RecipeSerializer,
