@@ -65,12 +65,12 @@ def handle_post_favorite_or_cart(request, pk, model):
 def handle_delete_favorite_or_cart(request, pk, model):
     """Функция для Delete запросов фаворит шопин карт."""
     recipe = get_object_or_404(Recipe, pk=pk)
-    shopping_cart_recipe = model.objects.filter(
+    delete_model = model.objects.filter(
         user=request.user.id,
         recipe=recipe.id)
-    if not shopping_cart_recipe.exists():
+    if not delete_model.exists():
         raise serializers.ValidationError(
-            'нельзя удалить подписки которой нет'
+            'нельзя удалить то чего нет'
         )
-    shopping_cart_recipe.delete()
+    delete_model.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)

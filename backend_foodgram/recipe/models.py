@@ -1,7 +1,8 @@
 import secrets
 import string
 
-from api.constants import MAX_LENGTH, MAX_SLAG, MAX_VALUE, MIN_VALUE
+from api.constants import (MAX_LENGTH, MAX_SLAG, MAX_VALUE,
+                           MIN_VALUE, HASH_LENGTH)
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.html import mark_safe
@@ -41,6 +42,9 @@ class Ingredient(models.Model):
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
 
+    def __str__(self):
+        return self.name
+
 
 class Recipe(models.Model):
     tags = models.ManyToManyField(
@@ -65,11 +69,11 @@ class Recipe(models.Model):
         validators=[
             MinValueValidator(
                 MIN_VALUE,
-                message='Время готовки должно быть больше одной минуты'
+                message=f'Время готовки должно быть больше {MIN_VALUE} минуты'
             ),
             MaxValueValidator(
                 MAX_VALUE,
-                message='Время готовки должно быть меньше 1000 минут'
+                message=f'Время готовки должно быть меньше {MAX_VALUE} минут'
             )
         ],
     )
@@ -147,11 +151,11 @@ class IngredientRecipe(models.Model):
         validators=[
             MinValueValidator(
                 MIN_VALUE,
-                message='Количество ингредиента не может быть нулевым'
+                message=f'Количество не может быть меньше {MIN_VALUE}'
             ),
             MaxValueValidator(
                 MAX_VALUE,
-                message='Количество ингредиента не может быть больше тысячи'
+                message=f'Количество не может быть больше {MAX_VALUE}'
             )
         ],
     )
@@ -202,7 +206,7 @@ class ShoppingCart(models.Model):
 
 class LinkMapped(models.Model):
     def generate_hash():
-        length = 12
+        length = HASH_LENGTH
         characters = string.ascii_letters + string.digits
         return ''.join(secrets.choice(characters) for _ in range(length))
 

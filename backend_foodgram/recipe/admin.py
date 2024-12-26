@@ -1,8 +1,8 @@
-from api.constants import PER_PAGE
 from django.contrib import admin
 
 from .models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                      ShoppingCart, Tag)
+from api.constants import PER_PAGE
 
 
 @admin.register(Tag)
@@ -63,6 +63,7 @@ class RecipeAdmin(admin.ModelAdmin):
         'pub_date',
         'ingredient_list',
         'tag_list',
+        'image_tag',
     )
     inlines = [
         IngredientInline,
@@ -76,15 +77,14 @@ class RecipeAdmin(admin.ModelAdmin):
     list_per_page = PER_PAGE
     search_fields = ('author', 'name')
 
+    @admin.display(description='Список ингредиентов')
     def ingredient_list(self, obj):
         return ', '.join(
             [ingredient.name for ingredient in obj.ingredients.all()])
 
+    @admin.display(description='Список тегов')
     def tag_list(self, obj):
         return ', '.join([tag.name for tag in obj.tags.all()])
-
-    ingredient_list.short_description = 'Список ингредиентов'
-    tag_list.short_description = 'Список тегов'
 
 
 @admin.register(IngredientRecipe)
@@ -112,9 +112,8 @@ class FavoriteAdmin(admin.ModelAdmin):
     )
 
     empty_value_display = 'значение отсутствует'
-    list_editable = ('user', 'recipe')
-    list_filter = ('user',)
-    search_fields = ('user',)
+    list_filter = ('user', 'recipe')
+    search_fields = ('user', 'recipe')
     list_per_page = PER_PAGE
 
 
@@ -131,5 +130,5 @@ class ShoppingCartAdmin(admin.ModelAdmin):
     empty_value_display = 'значение отсутствует'
     list_editable = ('recipe', 'user')
     list_filter = ('user',)
-    search_fields = ('user',)
+    search_fields = ('user', 'recipe')
     list_per_page = PER_PAGE

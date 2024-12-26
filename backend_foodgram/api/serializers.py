@@ -1,13 +1,13 @@
 from django.db import transaction
-from recipe.models import (Favorite, Ingredient, IngredientRecipe, LinkMapped,
-                           Recipe, ShoppingCart, Tag)
 from rest_framework import serializers, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.validators import UniqueTogetherValidator
-from user.serializers import Base64ImageField, UserSerializer
 
+from recipe.models import (Favorite, Ingredient, IngredientRecipe, LinkMapped,
+                           Recipe, ShoppingCart, Tag)
+from user.serializers import Base64ImageField, UserSerializer
 from .constants import BAD_INGREDIENT_LENGTH
 
 
@@ -106,7 +106,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
 
     def validate_ingredients(self, ingredients):
-        if len(ingredients) == BAD_INGREDIENT_LENGTH:
+        if not ingredients:
             raise serializers.ValidationError('Добавьте хотя бы 1 ингредиент.')
         ingredients_data = [
             ingredient.get('id') for ingredient in ingredients
@@ -135,7 +135,9 @@ class RecipeSerializer(serializers.ModelSerializer):
                 ) for ingredient in ingredients_data
             ])
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            raise serializers.ValidationError(
+                'Ингредиенты рецепта должны быть'
+            )
 
     @transaction.atomic
     def create(self, validated_data):
@@ -159,13 +161,7 @@ class RecipeSerializer(serializers.ModelSerializer):
                                                      ['ingredients']):
             raise ValidationError(
                 {'ingredients': 'Поле `ingredients` обязательно'})
-        # Стандартные поля можно обновить, вызвавродительскуюреализацию метода.
-        # не выходит, так как не все поля доступны для редактирования
-        instance.name = validated_data.get('name', instance.name)
-        instance.text = validated_data.get('text', instance.text)
-        instance.cooking_time = validated_data.get(
-            'cooking_time', instance.cooking_time
-        )
+        super().update(instance, validated_data)
         tags_data = validated_data.get('tags')
         instance.tags.set(tags_data)
         ingredients_data = validated_data.get('ingredients')
