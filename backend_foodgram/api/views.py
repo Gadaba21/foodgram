@@ -2,8 +2,6 @@ from django.db.models import Sum
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.http import require_GET
 from django_filters.rest_framework import DjangoFilterBackend
-from recipe.models import (Favorite, Ingredient, IngredientRecipe, LinkMapped,
-                           Recipe, ShoppingCart, Tag)
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
@@ -12,15 +10,33 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
+from recipe.models import (
+    Favorite,
+    Ingredient,
+    IngredientRecipe,
+    LinkMapped,
+    Recipe,
+    ShoppingCart,
+    Tag
+)
+
 from .filters import IngredientSearchFilter, RecipeFilter
 from .pagination import CustomPageNumberPagination
 from .permissions import AnonimReadOnly, IsSuperUserIsAdminIsAuthor
-from .serializers import (FavoriteSerializer, IngredientSerializer,
-                          RecipeGETSerializer, RecipeSerializer,
-                          ShoppingCartSerializer, ShortenerSerializer,
-                          TagSerializer)
-from .utils import (create_shopping_cart, handle_delete_favorite_or_cart,
-                    handle_post_favorite_or_cart)
+from .serializers import (
+    FavoriteSerializer,
+    IngredientSerializer,
+    RecipeGETSerializer,
+    RecipeSerializer,
+    ShoppingCartSerializer,
+    ShortenerSerializer,
+    TagSerializer
+)
+from .utils import (
+    create_shopping_cart,
+    handle_delete_favorite_or_cart,
+    handle_post_favorite_or_cart
+)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):

@@ -3,11 +3,17 @@ from base64 import b64decode
 
 from django.core.files.base import ContentFile
 from djoser.serializers import UserCreateSerializer, UserSerializer
-from recipe.models import Recipe
-from rest_framework.serializers import (CharField, ImageField, ModelSerializer,
-                                        ReadOnlyField, SerializerMethodField,
-                                        ValidationError)
+from rest_framework.serializers import (
+    CharField,
+    ImageField,
+    ModelSerializer,
+    ReadOnlyField,
+    SerializerMethodField,
+    ValidationError
+)
 from rest_framework.validators import UniqueTogetherValidator
+
+from recipe.models import Recipe
 
 from .models import Subscription, User
 
