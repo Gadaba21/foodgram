@@ -4,7 +4,6 @@ import string
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-
 from api.constants import (
     HASH_LENGTH,
     MAX_LENGTH,
