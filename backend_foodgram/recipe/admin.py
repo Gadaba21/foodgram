@@ -71,12 +71,13 @@ class RecipeAdmin(admin.ModelAdmin):
         'pub_date',
         'ingredient_list',
         'tag_list',
+        'get_image',
     )
     inlines = [
         IngredientInline,
         TagInline
     ]
-    fields = ('get_image', 'name', 'text', 'cooking_time', 'author')
+    fields = ('image', 'name', 'text', 'cooking_time', 'author', 'get_image')
     readonly_fields = ['get_image']
     empty_value_display = 'значение отсутствует'
     list_editable = ('author',)
