@@ -71,7 +71,6 @@ class RecipeAdmin(admin.ModelAdmin):
         'pub_date',
         'ingredient_list',
         'tag_list',
-        'get_image',
     )
     inlines = [
         IngredientInline,
