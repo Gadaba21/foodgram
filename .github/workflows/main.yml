@@ -73,8 +73,6 @@ jobs:
     - name: Install dependencies
       run: |
         cd frontend/
-        npm install
-        npm update --legacy-peer-deps
     - name: Test frontend
       run: |
         cd frontend/
