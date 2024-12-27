@@ -142,4 +142,3 @@ class ShoppingCartAdmin(admin.ModelAdmin):
     list_filter = ('user__username', 'recipe__name')
     search_fields = ('user__username', 'recipe__name')
     list_per_page = PER_PAGE
-
