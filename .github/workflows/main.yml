@@ -74,6 +74,7 @@ jobs:
       run: |
         cd frontend/
         npm install
+        npm update
     - name: Test frontend
       run: |
         cd frontend/
