@@ -143,10 +143,3 @@ class ShoppingCartAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'recipe__name')
     list_per_page = PER_PAGE
 
-
-class RecipeTagAdmin(admin.ModelAdmin):
-    """Класс настройки связи рецептов и тегов."""
-
-    list_display = ('recipe', 'tag')
-    search_fields = ('recipe__name', 'tag__name')
-    list_filter = ('recipe__name', 'tag__name')
