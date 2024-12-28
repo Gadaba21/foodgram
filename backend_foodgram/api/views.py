@@ -112,9 +112,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_name='get-link',
     )
     def get_link(self, request, pk):
-        self.get_object()
         original_url = request.META.get('HTTP_REFERER')
-        if original_url is None:
+        if original_url:
             url = reverse('api:recipes-detail', kwargs={'pk': pk})
             original_url = request.build_absolute_uri(url)
         serializer = ShortenerSerializer(
