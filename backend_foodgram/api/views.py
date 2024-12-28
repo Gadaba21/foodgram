@@ -112,10 +112,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         url_name='get-link',
     )
     def get_link(self, request, pk):
-        original_url = request.META.get('HTTP_REFERER')
-        if original_url:
-            url = reverse('api:recipes-detail', kwargs={'pk': pk})
-            original_url = request.build_absolute_uri(url)
+        original_url = f"http://foodgrampampam.zapto.org/recipes/{pk}"
         serializer = ShortenerSerializer(
             data={'original_url': original_url},
             context={'request': request},
